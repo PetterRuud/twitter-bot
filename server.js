@@ -1,4 +1,3 @@
-const http = require('http')
 require('dotenv').config()
 const Twit = require('twit')
 const T = new Twit({
@@ -8,20 +7,14 @@ const T = new Twit({
   access_token_secret: process.env.access_token_secret,
 })
 
-http
-  .createServer(function (req, res) {
-    res.write('Starting twitter-bot')
-    const stream = T.stream('statuses/filter', {
-      track: ['hey invite', 'hey code', '#hey', 'hey.com'],
-    })
+const stream = T.stream('statuses/filter', {
+  track: ['hey invite', 'hey code', '#hey', 'hey.com'],
+})
 
-    stream.on('tweet', function (tweet) {
-      match_res = tweet.text.match(/\b[A-z0-9]{7}\b/g)
-      res.write(tweet.text)
-      if (match_res != null) {
-        res.write('IMPORTNAT: ' + match_res)
-      }
-    })
-    res.end()
-  })
-  .listen(8080)
+stream.on('tweet', function (tweet) {
+  match_res = tweet.text.match(/\b[A-z0-9]{7}\b/g)
+  console.log(tweet.text)
+  if (match_res != null) {
+    console.log('IMPORTNAT: ' + match_res + '\r\n--')
+  }
+})
